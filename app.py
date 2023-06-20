@@ -18,6 +18,7 @@ from sklearn.linear_model import LinearRegression
 
 from fpdf import FPDF
 from dash.exceptions import PreventUpdate
+import gunicorn
 
 # ========== Styles ============ #
 tab_card = {'height': '100%'}
