@@ -22,8 +22,8 @@ from dash.exceptions import PreventUpdate
 # ========== Styles ============ #
 tab_card = {'height': '100%'}
 
-data = pd.read_csv('src\\Steel_industry_data.csv')
-data_origem = pd.read_csv('src\\Steel_industry_data.csv')
+data = pd.read_csv('Steel_industry_data.csv')
+data_origem = pd.read_csv('Steel_industry_data.csv')
 
 
 ## TRATAMENTO
@@ -475,7 +475,7 @@ def graph07(y_test, y_test_pred, selection):
 def imageFig(fig,nm_grafico):
 
     #dadosGraph(fig,nm_titulo,nm_grafico)
-    fig.savefig('src\\'+nm_grafico+'.png')
+    fig.savefig(nm_grafico+'.png')
 
     buf = BytesIO()
     fig.savefig(buf, format="png")
@@ -491,7 +491,7 @@ def dadosGraph(pdf,nm_titulo,nm_grafico):
     pdf.ln(10)
     pdf.cell(w=0,txt=nm_titulo,align='L')
     pdf.ln(10)
-    pdf.cell(w=0,link=pdf.image('src\\'+nm_grafico+'.png',w=175), align='C')
+    pdf.cell(w=0,link=pdf.image(nm_grafico+'.png',w=175), align='C')
 
 def titleColum(selection):
     retorno = ''
