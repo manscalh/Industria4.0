@@ -759,6 +759,4 @@ def func(n_clicks,selection,df_origem):
         return dcc.send_file("relatorio.pdf")
 
 if __name__ == '__main__':
-    app.run(debug=False)
-else:
-    app.run(debug=False)
+    app.run_server(debug=True)
