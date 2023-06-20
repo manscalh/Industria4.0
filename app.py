@@ -760,3 +760,5 @@ def func(n_clicks,selection,df_origem):
 
 if __name__ == '__main__':
     app.run(debug=False)
+else:
+    app.run(debug=True)
