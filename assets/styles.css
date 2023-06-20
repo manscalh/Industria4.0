@@ -1,0 +1,72 @@
+/* ========== Main Configs ============ */
+*{
+    box-sizing: border-box;
+}
+
+H1,H2,H4,H5,H6,plainText{
+    color: aliceblue;
+    background-color: rgb(42, 90, 72);
+}
+
+H3{
+    color: aliceblue;
+    background-color: rgb(42, 90, 72);
+}
+
+body {
+    height: 99vh;
+    background-size: 300% 300%;
+}
+
+#rangeslider{
+    color: aliceblue;
+}
+
+legend{
+    color: rgb(42, 90, 72);
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.card{
+       background-color: aliceblue;
+       margin-bottom: 5px;
+}
+
+.card-title {
+    background-color:rgb(42, 90, 72);
+}
+
+
+button{
+    size: 10px;
+}
+
+::-webkit-scrollbar {
+    display: none; /* Chrome, Safari e Opera */
+}
+
+/* ============ Corrigindo as cores do menu dropdown ===========*/
+div.Select-control {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    border: 0.5px solid #1b1e20;
+    font-size: 80%;
+}
+
+.VirtualizedSelectOption {
+    background-color: rgba(0, 0, 0, 0.3);
+    color:white !important;
+    background-color:rgb(42, 90, 72);
+}
+
+textfield{
+    background-color: white;
+
+}
+.Select-value-label {
+    color: black !important;
+    font-size: 12px;
+}
