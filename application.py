@@ -65,7 +65,7 @@ x_train, x_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, rand
 
 #### Regressão Linear
 from sklearn.svm import SVR
-model_SVR = SVR().fit(x_train, y_train)
+#model_SVR = SVR().fit(x_train, y_train)
 model = LinearRegression().fit(x_train, y_train)
 
 #Predições
@@ -73,8 +73,8 @@ y_train_pred = model.predict(x_train)
 y_test_pred = model.predict(x_test)
 
 #Predições_SVR
-y_train_pred_SVR = model_SVR.predict(x_train)
-y_test_pred_SVR = model_SVR.predict(x_test)
+# y_train_pred_SVR = model_SVR.predict(x_train)
+# y_test_pred_SVR = model_SVR.predict(x_test)
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 application = app.server
@@ -374,59 +374,6 @@ app.layout = dbc.Container([
         ])
     ], className='main_row g-2 my-auto'),
 
-#Training data prediction - SVR
-    dbc.Row([
-        dbc.Col([
-            dbc.Card([                
-                dbc.Row([
-                    dbc.Col([
-                         html.H3("Gráfico - Training data prediction - SVR - ", className='mb-2'),                    
-                        ], sm=9, md=9, style={'margin-top': '15px'}),
-                ], className='g-1', style={'height': '20%', 'justify-content': 'center'}),
-
-            ], style=tab_card,class_name='card-title')
-        ])
-    ], className='main_row g-2 my-auto'),
-    dbc.Row([
-        dbc.Col([
-            dbc.Card([                
-                dbc.Row([
-                    dbc.Col([
-                        html.Img(id='bar-graph-matplotlib8',style={'text-align': 'center'})
-                    ], sm=12, md=12, style={'margin-top': '5px'}),
-                ], className='g-1', style={'height': '20%', 'justify-content': 'center'}),
-
-            ], style=tab_card)
-        ])
-    ], className='main_row g-2 my-auto'),
-
-#Test data prediction - SVR
-    dbc.Row([
-        dbc.Col([
-            dbc.Card([                
-                dbc.Row([
-                    dbc.Col([
-                         html.H3("Gráfico - Test data prediction - SVR - ", className='mb-2'),                    
-                        ], sm=9, md=9, style={'margin-top': '15px'}),
-                ], className='g-1', style={'height': '20%', 'justify-content': 'center'}),
-
-            ], style=tab_card,class_name='card-title')
-        ])
-    ], className='main_row g-2 my-auto'),
-    dbc.Row([
-        dbc.Col([
-            dbc.Card([                
-                dbc.Row([
-                    dbc.Col([
-                        html.Img(id='bar-graph-matplotlib9',style={'text-align': 'center'})
-                    ], sm=12, md=12, style={'margin-top': '5px'}),
-                ], className='g-1', style={'height': '20%', 'justify-content': 'center'}),
-
-            ], style=tab_card)
-        ])
-    ], className='main_row g-2 my-auto'),
-
-
 ])
 
 def graph01(dataframe, selected_yaxis):
@@ -614,8 +561,6 @@ def titleColum(selection):
     Output(component_id='bar-graph-matplotlib5_update', component_property='src'),
     Output(component_id='bar-graph-matplotlib6', component_property='src'),
     Output(component_id='bar-graph-matplotlib7', component_property='src'),
-    Output(component_id='bar-graph-matplotlib8', component_property='src'),
-    Output(component_id='bar-graph-matplotlib9', component_property='src'),
     [Input('rangeslider', 'value'),
     Input('dataset_fixed', 'data'),
     Input('category', 'value'),
@@ -662,14 +607,6 @@ def range_slider(range, df_store,selected):
     grafico06 = graph06(y_train, y_train_pred, selected)
     grafico07 = graph07(y_test, y_test_pred, selected)
 
-    model_SVR = SVR().fit(x_train, y_train)
-
-    #Predições_SVR
-    y_train_pred_SVR = model_SVR.predict(x_train)
-    y_test_pred_SVR = model_SVR.predict(x_test)
-
-    grafico08 = graph08(y_train, y_train_pred_SVR, selected)
-    grafico09 = graph09(y_test, y_test_pred_SVR, selected)
 
     return (
         grafico01,
@@ -681,9 +618,7 @@ def range_slider(range, df_store,selected):
         grafico05,
         grafico05_update,
         grafico06,
-        grafico07,
-        grafico08,
-        grafico09
+        grafico07
     )
 
 #Title Graph01
