@@ -74,7 +74,7 @@ y_train_pred = model.predict(x_train)
 y_test_pred = model.predict(x_test)
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
-app.server
+application = app.server
 app.layout = dbc.Container([
 
 # Armazenamento de dataset
@@ -759,4 +759,4 @@ def func(n_clicks,selection,df_origem):
         return dcc.send_file("relatorio.pdf")
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    application.run(debug=True,host='0.0.0.0')
