@@ -11,7 +11,7 @@ from io import BytesIO
 import pandas as pd 
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score            #pip install -U scikit-learn
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 from sklearn.linear_model import LinearRegression
@@ -22,8 +22,8 @@ from dash.exceptions import PreventUpdate
 # ========== Styles ============ #
 tab_card = {'height': '100%'}
 
-data = pd.read_csv('Steel_industry_data.csv')
-data_origem = pd.read_csv('Steel_industry_data.csv')
+data = pd.read_csv('src\\Steel_industry_data.csv')
+data_origem = pd.read_csv('src\\Steel_industry_data.csv')
 
 
 ## TRATAMENTO
@@ -65,14 +65,19 @@ x_train, x_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, rand
 
 #### Regressão Linear
 from sklearn.svm import SVR
-#model = SVR().fit(x_train, y_train)
+model_SVR = SVR().fit(x_train, y_train)
 model = LinearRegression().fit(x_train, y_train)
 
 #Predições
 y_train_pred = model.predict(x_train)
 y_test_pred = model.predict(x_test)
 
+#Predições_SVR
+y_train_pred_SVR = model_SVR.predict(x_train)
+y_test_pred_SVR = model_SVR.predict(x_test)
+
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+application = app.server
 app.layout = dbc.Container([
 
 # Armazenamento de dataset
@@ -369,6 +374,59 @@ app.layout = dbc.Container([
         ])
     ], className='main_row g-2 my-auto'),
 
+#Training data prediction - SVR
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([                
+                dbc.Row([
+                    dbc.Col([
+                         html.H3("Gráfico - Training data prediction - SVR - ", className='mb-2'),                    
+                        ], sm=9, md=9, style={'margin-top': '15px'}),
+                ], className='g-1', style={'height': '20%', 'justify-content': 'center'}),
+
+            ], style=tab_card,class_name='card-title')
+        ])
+    ], className='main_row g-2 my-auto'),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([                
+                dbc.Row([
+                    dbc.Col([
+                        html.Img(id='bar-graph-matplotlib8',style={'text-align': 'center'})
+                    ], sm=12, md=12, style={'margin-top': '5px'}),
+                ], className='g-1', style={'height': '20%', 'justify-content': 'center'}),
+
+            ], style=tab_card)
+        ])
+    ], className='main_row g-2 my-auto'),
+
+#Test data prediction - SVR
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([                
+                dbc.Row([
+                    dbc.Col([
+                         html.H3("Gráfico - Test data prediction - SVR - ", className='mb-2'),                    
+                        ], sm=9, md=9, style={'margin-top': '15px'}),
+                ], className='g-1', style={'height': '20%', 'justify-content': 'center'}),
+
+            ], style=tab_card,class_name='card-title')
+        ])
+    ], className='main_row g-2 my-auto'),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([                
+                dbc.Row([
+                    dbc.Col([
+                        html.Img(id='bar-graph-matplotlib9',style={'text-align': 'center'})
+                    ], sm=12, md=12, style={'margin-top': '5px'}),
+                ], className='g-1', style={'height': '20%', 'justify-content': 'center'}),
+
+            ], style=tab_card)
+        ])
+    ], className='main_row g-2 my-auto'),
+
+
 ])
 
 def graph01(dataframe, selected_yaxis):
@@ -472,10 +530,31 @@ def graph07(y_test, y_test_pred, selection):
 
     return imageFig(fig,'Graph07')
 
+def graph08(y_train, y_train_pred_SVR, selection):
+    
+    fig, ax = plt.subplots(figsize=(12,5))
+    ax.plot(y_train, color = 'red', linewidth=2.0, alpha = 0.6)
+    ax.plot(y_train_pred, color = 'blue', linewidth=0.8)
+    ax.legend(['Atual','Predito'])
+    score = r2_score(y_train, y_train_pred_SVR)
+    ax.set_title("Training data prediction SVR - "+selection)
+
+    return imageFig(fig,'Graph08')
+
+def graph09(y_test, y_test_pred_SVR, selection):
+    fig, ax =plt.subplots(figsize=(12,5))
+    ax.plot(y_test, color = 'red', linewidth=2.0, alpha = 0.6)
+    ax.plot(y_test_pred, color = 'blue', linewidth=0.8)
+    ax.legend(['Atual','Predito'])
+    score = r2_score(y_test, y_test_pred_SVR)
+    ax.set_title("Test data prediction SVR - " + selection )
+
+    return imageFig(fig,'Graph09')
+
 def imageFig(fig,nm_grafico):
 
     #dadosGraph(fig,nm_titulo,nm_grafico)
-    fig.savefig(nm_grafico+'.png')
+    fig.savefig('src\\'+nm_grafico+'.png')
 
     buf = BytesIO()
     fig.savefig(buf, format="png")
@@ -489,9 +568,10 @@ def imageFig(fig,nm_grafico):
 
 def dadosGraph(pdf,nm_titulo,nm_grafico):
     pdf.ln(10)
+    pdf.set_font("Arial","", 14)
     pdf.cell(w=0,txt=nm_titulo,align='L')
     pdf.ln(10)
-    pdf.cell(w=0,link=pdf.image(nm_grafico+'.png',w=175), align='C')
+    pdf.cell(w=0,link=pdf.image('src\\'+nm_grafico+'.png',w=175), align='C')
 
 def titleColum(selection):
     retorno = ''
@@ -515,6 +595,8 @@ def titleColum(selection):
         retorno = 'Dia da semana'
     elif(selection == 'Load_Type'): 
         retorno = 'Tipo de Consumo da Instalação: Light, Medium, Maximum'
+    else:
+        retorno = ""
     
     return (
         retorno
@@ -532,7 +614,8 @@ def titleColum(selection):
     Output(component_id='bar-graph-matplotlib5_update', component_property='src'),
     Output(component_id='bar-graph-matplotlib6', component_property='src'),
     Output(component_id='bar-graph-matplotlib7', component_property='src'),
-
+    Output(component_id='bar-graph-matplotlib8', component_property='src'),
+    Output(component_id='bar-graph-matplotlib9', component_property='src'),
     [Input('rangeslider', 'value'),
     Input('dataset_fixed', 'data'),
     Input('category', 'value'),
@@ -579,6 +662,15 @@ def range_slider(range, df_store,selected):
     grafico06 = graph06(y_train, y_train_pred, selected)
     grafico07 = graph07(y_test, y_test_pred, selected)
 
+    model_SVR = SVR().fit(x_train, y_train)
+
+    #Predições_SVR
+    y_train_pred_SVR = model_SVR.predict(x_train)
+    y_test_pred_SVR = model_SVR.predict(x_test)
+
+    grafico08 = graph08(y_train, y_train_pred_SVR, selected)
+    grafico09 = graph09(y_test, y_test_pred_SVR, selected)
+
     return (
         grafico01,
         grafico01_update,
@@ -589,7 +681,9 @@ def range_slider(range, df_store,selected):
         grafico05,
         grafico05_update,
         grafico06,
-        grafico07
+        grafico07,
+        grafico08,
+        grafico09
     )
 
 #Title Graph01
@@ -620,6 +714,8 @@ def func(selection):
         retorno = 'Dia da semana'
     elif(selection == 'Load_Type'): 
         retorno = 'Tipo de Consumo da Instalação: Light, Medium, Maximum'
+    else:
+        retorno = ""
     
     return (
         retorno
@@ -722,39 +818,32 @@ def func(n_clicks,selection,df_origem):
 
 #Graph01
         pdf.add_page()
-
         dadosGraph(pdf,titleColum(selection),'graph01')
-
         dadosGraph(pdf,"",'graph01_update')
-
+#Graph02
         pdf.add_page()
-
-        dadosGraph(pdf,"Gráfico de Correlação - "+selection,'graph02')
-
+        dadosGraph(pdf,'Heatmap - Gráfico de Correlação','graph02')
+#Graph02_update
         pdf.add_page()
-
-        dadosGraph(pdf,"Gráfico de Correlação - "+selection,'graph02_update')
-
+        dadosGraph(pdf,'Heatmap - Gráfico de Correlação','graph02_update')
+#Graph03
         pdf.add_page()
-
-        dadosGraph(pdf,selection,'graph03')
-
-        dadosGraph(pdf,selection,'graph04')
-
+        dadosGraph(pdf,'Gráfico - Test Set','graph03')
+#Graph04
+        dadosGraph(pdf,'Gráfico - Training Set','graph04')
+#Graph05
         pdf.add_page()
-
-        dadosGraph(pdf,selection,'graph05')
-
-        dadosGraph(pdf,selection,'graph05_update')
-
+        dadosGraph(pdf,'Gráfico - Boxplot','graph05')
+#Graph05_update
+        dadosGraph(pdf,'Gráfico - Boxplot - Day of Week','graph05_update')
+#Graph06
         pdf.add_page()
-
-        dadosGraph(pdf,selection,'graph06')
-
-        dadosGraph(pdf,selection,'graph07')
+        dadosGraph(pdf,'Gráfico - Training data prediction','graph06')
+#Graph07
+        dadosGraph(pdf,'Gráfico - Test data prediction','graph07')
 
         pdf.output("relatorio.pdf")
         return dcc.send_file("relatorio.pdf")
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8002,)
+    application.run(debug=False,host='0.0.0.0')
